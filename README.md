@@ -2,17 +2,12 @@
 
 #### Module descriptions:
 
-* database
-sqlite wrapper for image processing purposes
+* **database** - sqlite wrapper for image processing purposes
 
-* knn_search
-CUDA based kNN algorithm implementation
+* **knn_search** - CUDA based kNN algorithm implementation
 
-* model
-model collection (CustomModel interface)
+* **model** - model collection (CustomModel interface)
 
-* smart_pot 
-recommender Telegram bot
+* **smart_pot** - recommender Telegram bot
 
-* training
-module for model training and fine-tuning
+* **training** - module for model training and fine-tuning
