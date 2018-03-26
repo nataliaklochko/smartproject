@@ -1,16 +1,16 @@
 # smartproject
 
-### - database
+### database
 sqlite wrapper for image processing purposes
 
-### - knn_search
+### knn_search
 CUDA based kNN algorithm implementation
 
-### - model
+### model
 model collection (CustomModel interface)
 
-### - smart_pot 
+### smart_pot 
 recommender Telegram bot
 
-### - training
+### training
 module for model training and fine-tuning
