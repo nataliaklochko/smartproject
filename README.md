@@ -1,6 +1,6 @@
 # smartproject
 
-### Module descriptions:
+#### Module descriptions:
 
 * database
 sqlite wrapper for image processing purposes
