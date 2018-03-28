@@ -4,7 +4,7 @@ from keras.applications.resnet50 import ResNet50
 
 from keras.engine.topology import Input
 from keras import metrics, Model
-from keras.layers import Dropout, Dense, Flatten
+from keras.layers import Dropout, Dense
 
 from keras.callbacks import ModelCheckpoint, TensorBoard
 from keras.preprocessing.image import ImageDataGenerator
@@ -30,9 +30,9 @@ def build_model(model_weights=None, num_to_freeze=17):
     # 176 layers
 
     x = base_model.output
-    x = Dense(128, activation="relu")(x)
+    x = Dense(512, activation="relu")(x)
     x = Dropout(0.5)(x)
-    x = Dense(64, activation="relu")(x)
+    x = Dense(256, activation="relu")(x)
     predictions = Dense(7, activation="softmax")(x)
     model = Model(input=base_model.input, output=predictions)
 

@@ -16,7 +16,12 @@ class AutoencoderModel(CustomModel):
     def __init__(self, name="Autoencoder_model"):
         super(AutoencoderModel, self).__init__(name)
 
-        base_model = load(os.path.join("utils", "autoencoder_model_0.h5"))
+        model_path = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "utils",
+            "autoencoder_model_0.h5"
+        )
+        base_model = load(model_path)
         self.model = Model(base_model.input, GlobalAveragePooling2D()(base_model.layers[6].output))
 
     def predict(self, img_path):

@@ -18,5 +18,5 @@ f = FeatureExtractor(
     load_names=False
 )
 
-m = VGGBottleneckModel()
+m = AutoencoderModel()
 m.load_dataset(dir_path=media_dir, db=f.db, table="smart_pot")

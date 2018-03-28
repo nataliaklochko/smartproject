@@ -51,7 +51,7 @@ class DataBase(object):
         self.conn.commit()
 
     def find_by_type(self, table_name, column_name, t):
-        self.c.execute("SELECT name, {0} FROM {1} WHERE type=?".format(column_name, table_name), (int(t)))
+        self.c.execute("SELECT name, {0} FROM {1} WHERE type=?".format(column_name, table_name), (int(t),))
         return self.c.fetchall()
 
     def find_name_by_id(self, table_name, id):

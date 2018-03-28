@@ -6,7 +6,7 @@ from knn_search.knn import find_knn
 from knn_search.metrics import pearson_correlation
 
 from keras.preprocessing import image
-from keras.applications.vgg16 import preprocess_input
+from keras.applications.resnet50 import preprocess_input
 
 
 class FeatureExtractor(object):

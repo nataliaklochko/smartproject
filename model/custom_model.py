@@ -56,10 +56,15 @@ class CustomModel(object):
         :param table: table name (str)
 
         """
+
         print("Exctracting features from {0}...".format(dir_path))
-        # names = db.get_names()
+        # names = db.get_names
+
+        i = 0
 
         for img_path in tqdm(os.listdir(dir_path)):
-            # for img_path in tqdm(names):
-            prediction = self.predict(img_path=os.path.join(dir_path, img_path))
-            db.insert_image_features(table, self.name, img_path, prediction)
+            i += 1
+            if i > 36370:
+                # for img_path in tqdm(names):
+                prediction = self.predict(img_path=os.path.join(dir_path, img_path))
+                db.insert_image_features(table, self.name, img_path, prediction)

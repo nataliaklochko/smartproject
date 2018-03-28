@@ -106,12 +106,12 @@ def train(model, generator, num_epochs=200):
 
     filepath="weights-improvement-{epoch:02d}-{loss:.2f}.hdf5"
     checkpointer = callbacks.ModelCheckpoint(
-        filepath=os.path.join("model", filepath),
+        filepath=os.path.join("triplet_model", filepath),
         monitor="loss",
         verbose=1
     )
     tensorboard = callbacks.TensorBoard(
-        log_dir='./logs',
+        log_dir='./triplet_logs',
         histogram_freq=0,
         write_graph=True,
         write_images=False
@@ -119,7 +119,7 @@ def train(model, generator, num_epochs=200):
 
     model.fit_generator(
         generator=generator,
-        steps_per_epoch=32,
+        steps_per_epoch=256,
         epochs=num_epochs,
         callbacks=[checkpointer, tensorboard]
     )

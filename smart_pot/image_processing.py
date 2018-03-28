@@ -65,7 +65,7 @@ class ImageProcessing(object):
             feature_array = prediction.reshape((1, -1))
             return feature_array
 
-    def find_similar(self, feature_vector, num_nearest=10):
+    def find_similar(self, feature_vector, num_nearest):
         top_k_indices_id = []
         top_k_names = []
         top_k_links = []
@@ -78,7 +78,7 @@ class ImageProcessing(object):
 
         return top_k_indices_id, top_k_names, top_k_links
 
-    def main(self, img_path):
+    def main(self, img_path, num_nearest=10):
         """
         :param img_path:  path to image to find similar of (in the media folder)
 
@@ -89,7 +89,7 @@ class ImageProcessing(object):
 
         try:
             f_vec = self.get_features(img_path)
-            sim_inds, sim_names, sim_links = self.find_similar(f_vec)
+            sim_inds, sim_names, sim_links = self.find_similar(f_vec, num_nearest)
             return sim_names, sim_links
         except Exception as e:
             print(e.args)
