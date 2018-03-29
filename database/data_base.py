@@ -57,3 +57,7 @@ class DataBase(object):
     def find_name_by_id(self, table_name, id):
         self.c.execute("SELECT name FROM {1} WHERE ID=?".format(table_name), (int(id)))
         return self.c.fetchall()
+
+    def write_type(self, table_name, img_name, t):
+        self.c.execute("UPDATE {0} SET type=? WHERE name=?".format(table_name), (t, img_name))
+        self.conn.commit()
