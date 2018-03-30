@@ -30,7 +30,11 @@ class CustomModel(object):
         """
         raise NotImplementedError
 
-    def load_dataset(self, dir_path, db, table, types=None):
+    def add_new_img(self, db, table, dir_path, img_name):
+        prediction = self.predict(img_path=os.path.join(dir_path, img_name))
+        db.insert_image_features(table, self.name, img_name, prediction)
+
+    def load_dataset(self, db, table, dir_path=None, names=None, types=None):
         """
         Loads image image_dataset to database
         Creates new column "name" in table and fills with feature vectors
@@ -47,7 +51,7 @@ class CustomModel(object):
         else:
             self._load_dir(dir_path, db, table)
 
-    def _load_dir(self, dir_path, db, table):
+    def _load_dir(self, db, table, dir_path=None, names=None, types=None):
         """
         Creates new column "name" in table and fills with feature vectors
 
@@ -58,13 +62,14 @@ class CustomModel(object):
         """
 
         print("Exctracting features from {0}...".format(dir_path))
-        # names = db.get_names
 
-        i = 0
+        if dir_path:
+            for img_name in tqdm(os.listdir(dir_path)):
+                    prediction = self.predict(img_path=os.path.join(dir_path, img_name))
+                    db.insert_image_features(table, self.name, img_name, prediction)
 
-        for img_path in tqdm(os.listdir(dir_path)):
-            i += 1
-            if i > 36370:
-                # for img_path in tqdm(names):
-                prediction = self.predict(img_path=os.path.join(dir_path, img_path))
-                db.insert_image_features(table, self.name, img_path, prediction)
+        elif names:
+            for img_name in tqdm(names):
+                prediction = self.predict(img_path=os.path.join(dir_path, img_name))
+                db.insert_image_features(table, self.name, img_name, prediction)
+

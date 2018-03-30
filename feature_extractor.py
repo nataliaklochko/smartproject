@@ -41,7 +41,6 @@ class FeatureExtractor(object):
             names = []
             for i, t in enumerate(self.types):
                 for img_name in os.listdir(os.path.join(self.imageset_dir, t)):
-                    # self.db.write_type(table_name=self.table_name, img_name=img_name, t=int(i))
                     names.append((img_name, int(self.types.index(t))))
             self.db.create_feature_table(table_name=self.table_name, img_names=names)
         else:
@@ -53,6 +52,12 @@ class FeatureExtractor(object):
             self.db.create_column(self.table_name, self.model.name)
         except:
             print("Column {0} exists".format(self.model.name))
+
+    def add_new_img(self, img_name):
+        id_list = self.db.find_by_name(self.table_name, img_name=img_name)
+        if not id_list:
+            self.db.create_feature_table(self.table_name, img_names=[img_name,])
+        self.model.add_new_img(self.table_name, self.imageset_dir, img_name)
 
     def extract(self):
         """
@@ -78,7 +83,6 @@ class FeatureExtractor(object):
 
             if pca:
                 features = pca.transform(features)
-
                 result_dict = {}
             try:
                 result = find_knn(X=features, y=None, metric=pearson_correlation, p="pos", k=50)

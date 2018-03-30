@@ -62,7 +62,7 @@ class DataBase(object):
         return names, vects
 
     def find_name_by_id(self, table_name, id):
-        self.c.execute("SELECT name FROM {1} WHERE ID=?".format(table_name), (int(id)))
+        self.c.execute("SELECT name FROM {1} WHERE ID=?".format(table_name), (int(id),))
         return self.c.fetchall()
 
     def write_type(self, table_name, img_name, t):
@@ -72,4 +72,7 @@ class DataBase(object):
     def delete_by_name(self, table_name, img_name):
         self.c.execute("DELETE FROM {0} WHERE name=?".format(table_name), (img_name,))
         self.conn.commit()
-        
+
+    def find_by_name(self, table_name, img_name):
+        self.c.execute("SELECT id FROM {0} WHERE name=?".format(table_name), (img_name,))
+        return self.c.fetchall()
