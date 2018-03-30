@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import numpy as np
 
 
 class DataBase(object):
@@ -52,7 +53,13 @@ class DataBase(object):
 
     def find_by_type(self, table_name, column_name, t):
         self.c.execute("SELECT name, {0} FROM {1} WHERE type=?".format(column_name, table_name), (int(t),))
-        return self.c.fetchall()
+        data = self.c.fetchall()
+        names = []
+        vects = []
+        for d in data:
+            names.append(d[0])
+            vects.append(np.frombuffer(d[1], dtype=np.float32))
+        return names, vects
 
     def find_name_by_id(self, table_name, id):
         self.c.execute("SELECT name FROM {1} WHERE ID=?".format(table_name), (int(id)))

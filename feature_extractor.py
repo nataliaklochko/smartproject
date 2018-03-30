@@ -1,6 +1,7 @@
 import os
 import pickle
 import numpy as np
+from tqdm import tqdm
 from database.data_base import DataBase
 from knn_search.knn import find_knn
 from knn_search.metrics import pearson_correlation
@@ -38,8 +39,9 @@ class FeatureExtractor(object):
             self.db.create_feature_table(self.table_name)
         elif self.types:
             names = []
-            for t in self.types:
+            for i, t in enumerate(self.types):
                 for img_name in os.listdir(os.path.join(self.imageset_dir, t)):
+                    # self.db.write_type(table_name=self.table_name, img_name=img_name, t=int(i))
                     names.append((img_name, int(self.types.index(t))))
             self.db.create_feature_table(table_name=self.table_name, img_names=names)
         else:
@@ -64,18 +66,29 @@ class FeatureExtractor(object):
             types=None
         )
 
-    def create_training_dataset(self):
+    def create_training_dataset(self, pca=None):
         try:
             os.stat(os.path.join(self.imageset_dir, self.model.name))
         except:
             os.mkdir(os.path.join(self.imageset_dir, self.model.name))
 
         for n in range(len(self.types)):
+            print(self.types[n])
             names, features = self.db.find_by_type(self.table_name, self.model.name, n)
-            result = find_knn(X=features, y=None, metric=pearson_correlation, p="pos", k=100)
-            result_dict = {}
-            for k, v in zip(names, result):
-                result_dict[k] = v
+
+            if pca:
+                features = pca.transform(features)
+
+                result_dict = {}
+            try:
+                result = find_knn(X=features, y=None, metric=pearson_correlation, p="pos", k=50)
+                for k, v in tqdm(zip(names, result)):
+                    result_dict[k] = v
+            except:
+                for k, f in tqdm(zip(names, features)):
+                    v = find_knn(X=features, y=f.reshape(1, -1), metric=pearson_correlation, p="pos", k=50)
+                    result_dict[k] = v
+
             file_path = os.path.join(self.imageset_dir, self.model.name, "{0}_{1}.pickle".format(n, "pears"))
             with open(file_path, "wb") as fp:
                 pickle.dump(result_dict, fp)
