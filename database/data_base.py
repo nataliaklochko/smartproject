@@ -68,3 +68,8 @@ class DataBase(object):
     def write_type(self, table_name, img_name, t):
         self.c.execute("UPDATE {0} SET type=? WHERE name=?".format(table_name), (t, img_name))
         self.conn.commit()
+
+    def delete_by_name(self, table_name, img_name):
+        self.c.execute("DELETE FROM {0} WHERE name=?".format(table_name), (img_name,))
+        self.conn.commit()
+        
