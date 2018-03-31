@@ -12,7 +12,7 @@ from keras.applications.resnet50 import preprocess_input
 
 class FeatureExtractor(object):
 
-    def __init__(self, model, imageset_dir, table_name="features_table", types=None, load_names=False):
+    def __init__(self, model, imageset_dir="media", table_name="smart_pot", types=None, load_names=False):
         """
         Creates object to collect features database and image_dataset for training
 
@@ -53,11 +53,16 @@ class FeatureExtractor(object):
         except:
             print("Column {0} exists".format(self.model.name))
 
-    def add_new_img(self, img_name):
-        id_list = self.db.find_by_name(self.table_name, img_name=img_name)
-        if not id_list:
-            self.db.create_feature_table(self.table_name, img_names=[img_name,])
-        self.model.add_new_img(self.table_name, self.imageset_dir, img_name)
+    def add_new_imgs(self, img_names):
+        img_names_type = [(im, -1) for im in img_names]
+        self.db.create_feature_table(self.table_name, img_names=img_names_type)
+        for img_name in img_names:
+            self.model.add_new_img(
+                db=self.db,
+                table=self.table_name,
+                dir_path=self.imageset_dir,
+                img_name=img_name
+            )
 
     def extract(self):
         """
