@@ -9,6 +9,9 @@ from knn_search.metrics import pearson_correlation
 from keras.preprocessing import image
 from keras.applications.resnet50 import preprocess_input
 
+from sklearn.decomposition import PCA
+from sklearn.cluster import MiniBatchKMeans
+
 
 class FeatureExtractor(object):
 
@@ -75,6 +78,32 @@ class FeatureExtractor(object):
             table=self.table_name,
             types=None
         )
+
+    @staticmethod
+    def _save_utils(obj, file_name):
+        with open("../smart_pot/utils/{0}".format(file_name), "wb") as file:
+            pickle.dump(obj, file)
+
+    def fit_pca(self, n_components=512):
+        names, features = self.db.get_features(
+            table_name=self.table_name,
+            model_name=self.model.name
+        )
+        pca = PCA(n_components=n_components)
+        features = pca.fit_transform(features)
+        self._save_utils(obj=pca, file_name="pca_{0}_{1}.pickle".format(self.model.name, n_components))
+        return names, features
+
+    def fit_kmeans(self, n_clusters=128):
+        names, features = self.db.get_features(
+            table_name=self.table_name,
+            model_name=self.model.name
+        )
+        mb_kmeans = MiniBatchKMeans(n_clusters=n_clusters, batch_size=4096)
+        clusters = mb_kmeans.fit_predict(features)
+        self._save_utils(obj=mb_kmeans, file_name="kmeans_{0}_{1}.pickle".format(self.model.name, n_clusters))
+        return names, clusters
+
 
     def create_training_dataset(self, pca=None):
         try:

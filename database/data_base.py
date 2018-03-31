@@ -39,6 +39,15 @@ class DataBase(object):
         names = [n[0] for n in self.c.fetchall()]
         return names
 
+    def get_features(self, table_name, model_name):
+        self.c.execute("SELECT name, {0} FROM {1}".format(model_name, table_name))
+        names = []
+        features = []
+        for item in self.c.fetchall():
+            names.append(item[0])
+            features.append(np.frombuffer(item[1], dtype=np.float32))
+        return names, features
+
     def close_conn(self):
         self.c.close()
         self.conn.close()
