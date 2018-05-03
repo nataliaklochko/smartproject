@@ -34,8 +34,8 @@ class DataBase(object):
             self.c.executemany("INSERT INTO {0}(name, type) VALUES (?, ?)".format(table_name), img_names)
         self.conn.commit()
 
-    def get_names(self):
-        self.c.execute("SELECT name FROM smart_pot WHERE ID > 46854")
+    def get_names(self, table_name):
+        self.c.execute("SELECT name FROM {0}".format(table_name))
         names = [n[0] for n in self.c.fetchall()]
         return names
 
@@ -57,7 +57,10 @@ class DataBase(object):
         self.conn.commit()
 
     def insert_image_features(self, table_name, column_name, img_name, prediction):
-        self.c.execute("UPDATE {0} SET {1}=? WHERE name=?".format(table_name, column_name), (prediction, img_name))
+        try:
+            self.c.executemany("UPDATE {0} SET {1}=? WHERE name=?".format(table_name, column_name), (prediction, img_name))
+        except:
+            self.c.execute("UPDATE {0} SET {1}=? WHERE name=?".format(table_name, column_name), (prediction, img_name))
         self.conn.commit()
 
     def find_by_type(self, table_name, column_name, t):
@@ -85,3 +88,13 @@ class DataBase(object):
     def find_by_name(self, table_name, img_name):
         self.c.execute("SELECT id FROM {0} WHERE name=?".format(table_name), (img_name,))
         return self.c.fetchall()
+
+    def get_table_names(self):
+        self.c.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        names_list = [s[0] for s in self.c.fetchall()]
+        names_list.remove("sqlite_sequence")
+        return names_list
+
+if __name__ == "__main__":
+    db = DataBase()
+    print(db.get_table_names())
