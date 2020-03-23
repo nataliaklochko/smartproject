@@ -1,5 +1,4 @@
-# TOKEN = "334463446:AAHPymT8mjJsEsB1MeU5wMq2ttl6-LoDIh8"
-TOKEN = "440786161:AAFAVYtdONziA0zFdwHr0-DDttpC4UMdnJk"
+TOKEN = ""
 
 ANSWERS = {
     "pos": "Да",
